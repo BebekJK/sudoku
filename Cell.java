@@ -109,13 +109,14 @@ public class Cell extends JTextField {
       }
 
 
-      // setBorder(new EmptyBorder(10,10,10,10));
+      ;
       if(focus){
          if(mainFocus) setBorder(BorderFactory.createLineBorder(GameBoardPanel.isDarkMode? LightBlue: BrighterBlue, 5));
          if(isEditable() && status!=CellStatus.CORRECT_GUESS && status!=CellStatus.WRONG_GUESS) setBackground(GameBoardPanel.isDarkMode? BrighterBlue: LightBlue);
       }
       else{
-         setBorder(null);
+         setBorder(BorderFactory.createLineBorder(GameBoardPanel.isDarkMode? FG_GIVEN_DARK : FG_GIVEN_LIGHT, 1));
+         // setBorder(null);
       }
 
    }

@@ -176,6 +176,24 @@ public class SudokuMain extends JFrame {
       bgMusic = AudioSystem.getClip();
       bgMusic.open(soundStream);
 
+      // Setting menubar
+      menubar.toggleSoundItem.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt){
+            if(menubar.toggleSoundItem.getText().equals("Disable Sound")){
+               bgMusic.stop();
+               menubar.toggleSoundItem.setText("Enable Sound");
+            }
+            else{
+               bgMusic.start();
+               menubar.toggleSoundItem.setText("Disable Sound");
+            }
+            
+         }
+      });
+
+      menubar.getHintItem.addActionListener(new hintListener());
+
       // add menu bar
       setJMenuBar(menubar.menubar);
 
@@ -235,6 +253,7 @@ public class SudokuMain extends JFrame {
       sudokuPane.add(board);
       sudokuPane.add(statusBar, BorderLayout.SOUTH);
       board.setOpaque(false);
+      // board.setBackground(Color.BLACK);
       centerPane.add(sudokuPane);
 
       // side bar container at the right
