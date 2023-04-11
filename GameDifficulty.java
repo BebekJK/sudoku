@@ -1,3 +1,5 @@
+
+
 public enum GameDifficulty {
     EASY,         // 32 empty cells
     MEDIUM,      // 45 empty cells
