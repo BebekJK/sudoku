@@ -1,4 +1,4 @@
-package sudoku;
+
 
 import javax.swing.JPanel;
 

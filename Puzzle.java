@@ -1,4 +1,4 @@
-   package sudoku;
+   
    /**
     * The Sudoku number puzzle to be solved
     */

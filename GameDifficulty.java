@@ -1,4 +1,4 @@
-package sudoku;
+
 
 public enum GameDifficulty {
     EASY,         // 32 empty cells

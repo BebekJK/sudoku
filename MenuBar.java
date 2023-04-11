@@ -1,4 +1,4 @@
-package sudoku;
+
 
 import javax.swing.*;
 
@@ -6,19 +6,16 @@ import javax.swing.*;
 public class MenuBar{
     JMenuBar menubar = new JMenuBar();
 
-    JMenu fileMenu, gameMenu, helpMenu;
-
     JMenuItem newGameItem, restartGameItem, exitGameItem;
-    JMenuItem toggleThemeItem, toggleSoundItem, getHintItem;
+    JMenuItem toggleThemeItem;
     JMenuItem instructionsItem, aboutItem;
 
     public MenuBar() {
-        fileMenu = new JMenu("File");
-        gameMenu = new JMenu("Game");
-        helpMenu = new JMenu("Help");
+        JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
+        JMenu helpMenu = new JMenu("Help");
   
-
-        // File Menu : new game, restart game, exit game
+  
         newGameItem = new JMenuItem("New Game");
         restartGameItem = new JMenuItem("Reset");
         exitGameItem = new JMenuItem("Exit");
@@ -26,22 +23,16 @@ public class MenuBar{
         fileMenu.add(restartGameItem);
         fileMenu.add(exitGameItem);
   
-        // Game Menu : toggle theme, toggle music, get hint
         toggleThemeItem = new JMenuItem("Change Theme");
-        toggleSoundItem = new JMenuItem("Disable Sound");
-        getHintItem = new JMenuItem("Get Hint");
-        gameMenu.add(toggleThemeItem);
-        gameMenu.add(toggleSoundItem);
-        gameMenu.add(getHintItem);
-
-        // Help Menu : instructions, about
+        editMenu.add(toggleThemeItem);
+  
         instructionsItem = new JMenuItem("Instructions");
         aboutItem = new JMenuItem("About");
         helpMenu.add(instructionsItem);
         helpMenu.add(aboutItem);
   
         menubar.add(fileMenu);
-        menubar.add(gameMenu);
+        menubar.add(editMenu);
         menubar.add(helpMenu);
     }
 }

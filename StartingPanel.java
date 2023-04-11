@@ -1,4 +1,4 @@
-package sudoku;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -44,9 +44,8 @@ public class StartingPanel extends JPanel{
             }
         });
         // startingComponentsPanel.setSize();
-
         usernameField = new PlaceholderTextField();
-        usernameField.setText("input your username...");
+        usernameField.setPlaceholder("input your username...");
         
 
         JPanel difficultyPanel = new JPanel();
@@ -73,7 +72,8 @@ public class StartingPanel extends JPanel{
         startingComponentsPanel.add(difficultyPanel);
         startingComponentsPanel.add(startButton);
         try {
-            backgroundImage = ImageIO.read(new File("sudoku/bglight.png"));
+            // disable
+            backgroundImage = ImageIO.read(new File("bglight.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
