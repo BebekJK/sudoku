@@ -44,10 +44,8 @@ public class StartingPanel extends JPanel{
             }
         });
         // startingComponentsPanel.setSize();
-
         usernameField = new PlaceholderTextField();
-        usernameField.setText("input your username...");
-        
+        usernameField.setPlaceholder("input your username...");
 
         JPanel difficultyPanel = new JPanel();
         difficultyPanel.setLayout(new GridLayout(1,5));

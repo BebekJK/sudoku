@@ -39,12 +39,6 @@ public class GameBoardPanel extends JPanel {
          }
       }
 
-      // [TODO 3] Allocate a common listener as the ActionEvent listener for all the
-      // Cells (JTextFields)
-
-      // [TODO 4] Adds this common listener to all editable cells
-      // .........
-
       for (int row = 0; row < GRID_SIZE; ++row) {
          for (int col = 0; col < GRID_SIZE; ++col) {
 
@@ -103,14 +97,7 @@ public class GameBoardPanel extends JPanel {
     * i.e., none of the cell have status of TO_GUESS or WRONG_GUESS
     */
    public boolean isSolved() {
-      for (int row = 0; row < GRID_SIZE; ++row) {
-         for (int col = 0; col < GRID_SIZE; ++col) {
-            if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
-               return false;
-            }
-         }
-      }
-      return true;
+      return SudokuMain.cellsLeft == 0;
    }
 
    // getter method
@@ -126,7 +113,7 @@ public class GameBoardPanel extends JPanel {
       return (c - '0' > 0 && c - '0' <= 9);
    }
 
-   private class KeyCellInputListener implements KeyListener {
+   class KeyCellInputListener implements KeyListener {
       @Override
       public void keyTyped(KeyEvent evt) {
          Cell sourceCell = (Cell) evt.getSource();
@@ -140,8 +127,17 @@ public class GameBoardPanel extends JPanel {
             if (numberIn == sourceCell.number) {
                sourceCell.status = CellStatus.CORRECT_GUESS;
                sourceCell.setEditable(false);
+
+               SudokuMain.cellsLeft--;
+               SudokuMain.lblCellsLeft.setText("Cells Left: " + SudokuMain.cellsLeft);
+
+               SudokuMain.boxesCount[numberIn-1]++;
+
             } else {
                sourceCell.status = CellStatus.WRONG_GUESS;
+
+               SudokuMain.mistakesCount++;
+               SudokuMain.lblMistakes.setText("Mistakes: " + SudokuMain.mistakesCount);
             }
             numberIn = numberIn % 10;
             sourceCell.setText(Integer.toString(numberIn));
@@ -156,6 +152,13 @@ public class GameBoardPanel extends JPanel {
             evt.consume();
          }
 
+         for (int boxNumber =0; boxNumber < 9; ++boxNumber) {
+            if (SudokuMain.boxesCount[boxNumber] == 9) {
+               JButton[] cellBoxesArray = SudokuMain.cellBoxesPanel.getCellBoxes();
+               // cellBoxesArray[boxNumber].setBackground(Color.BLACK);
+               cellBoxesArray[boxNumber].setEnabled(false);
+            }
+         }
          if(isSolved()){
             SudokuMain.timer.stop();
             JOptionPane.showMessageDialog(null, "Congratulations, Puzzle Solved!");

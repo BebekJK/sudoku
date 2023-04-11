@@ -3,11 +3,10 @@ package sudoku;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 import java.io.File;
 import java.io.IOException;
-
 import javax.sound.sampled.*;
+// import java.util.Arrays;
 
 /**
  * The main Sudoku program
@@ -17,33 +16,41 @@ public class SudokuMain extends JFrame {
    private static final long serialVersionUID = 1L; // to prevent serial warning
 
    // private variables
+   // panel
    GameBoardPanel board = new GameBoardPanel();
-   JButton btnReset = new JButton("Reset"), btnNewGame = new JButton("New Game"), btnHint = new JButton("Hint");
    JPanel sidebar, header, statusBar;
+   RightPane toolsPanel;
    MainBackground backcp;
-   JLabel lblTime = new JLabel("00:00"), lblMistakesCount = new JLabel("0"), lblHintLeft = new JLabel("3"),lblCellsLeft;
-   int hintCount = 3, cellsLeft;
    StartingPanel start = new StartingPanel();
-   // DifficultyPanel diff = new DifficultyPanel();
-   GridBagConstraints gbc = new GridBagConstraints();
-   MenuBar menubar = new MenuBar();
-   AudioInputStream soundStream;
+   TopBottomPane topPane = new TopBottomPane(), bottomPane = new TopBottomPane();
+   static BoxesLeft cellBoxesPanel;
 
+   // label
+   static JLabel lblTime = new JLabel("00:00"), lblHintLeft = new JLabel("Hint Left: " + 3),
+         lblCellsLeft, lblMistakes = new JLabel("Mistakes: " + 0);
+
+   // variables
+   static int hintCount = 3, cellsLeft, mistakesCount = 0, seconds = 0;
+   static int[] boxesCount = new int[9];
+
+   // menubar
+   MenuBar menubar = new MenuBar();
+
+   // image, audio, timer
+   AudioInputStream soundStream;
    private Clip bgMusic = null;
-   private int seconds = 0;
    private String imgPath;
    public static Timer timer;
 
    // Constructor
    public SudokuMain() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-
       Container cp = getContentPane();
       cp.setLayout(new BorderLayout());
       cp.add(start, BorderLayout.CENTER);
 
+      // ----- Starting Panel Configuration and Layout -----
       setStartDisabled();
       setDifficultyDisabled();
-
       start.getUserName().addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
@@ -93,17 +100,20 @@ public class SudokuMain extends JFrame {
          }
       });
 
-      // CODE MAIN //
-      // ----------header - mistakes count and time count-----------
+      // ----- end of --- Starting Panel Configuration -----
+
+
+
+
+      // ----- MAIN Sudoku Layout and Configuration -----
+      // HEADER (sub of main)
       header = new JPanel();
       header.setLayout(new GridLayout(1, 2));
 
-      // time count
+      // TIMER (sub of header (sub of main))
       lblTime.setFont(new Font("Serif", Font.PLAIN, 80));
       lblTime.setHorizontalAlignment(JLabel.CENTER);
       lblTime.setVerticalAlignment(JLabel.CENTER);
-
-      header.add(lblTime);
       timer = new Timer(1000, new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             seconds++;
@@ -112,72 +122,51 @@ public class SudokuMain extends JFrame {
             lblTime.setText(String.format("%02d:%02d", lblMinute, lblSecond));
          }
       });
+      header.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+      header.add(lblTime);
+      // ---------- END OF TIMER (sub of header (sub of main)) ----------
+      header.setOpaque(false);
+      // ---------- END OF HEADER (sub of main) ----------
 
-      // ------------------sidebar - re-start and reset button-----------------
-      sidebar = new JPanel();
-      sidebar.setLayout(new GridLayout(9, 1));
 
-      // new game button and menu
-      sidebar.add(btnNewGame);
-      hintCount = 3;
-      menubar.newGameItem.addActionListener(new restartGame());
-      btnNewGame.addActionListener(new restartGame());
-
-      // reset button and menu
-      sidebar.add(btnReset);
-      menubar.restartGameItem.addActionListener(new resetGame());
-      btnReset.addActionListener(new resetGame());
-
-      // toggle theme menu
-      menubar.toggleThemeItem.addActionListener(new toggleTheme());
-
-      // hint button
-      sidebar.add(btnHint);
-      btnHint.addActionListener(new hintListener());
-
-      // hint left counter in the sidebar
-      JPanel sideBarContainer = new JPanel();
-      sideBarContainer.setLayout(new GridLayout(2, 1));
-      sideBarContainer.setOpaque(false);
-
-      JPanel hintPanel = new JPanel();
-      hintPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
-      hintPanel.add(new JTransparentLabel("Hint Left: "));
-      hintPanel.add(lblHintLeft);
-      hintPanel.setOpaque(false);
-      sideBarContainer.add(hintPanel);
-
-      // mistakes count
-      JPanel mistakePanel = new JPanel();
-      mistakePanel.setOpaque(false);
-      mistakePanel.add(new JTransparentLabel("Mistakes: "));
-      mistakePanel.add(lblMistakesCount);
-      sideBarContainer.add(mistakePanel);
-
-      sidebar.add(sideBarContainer);
-
-      for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
-         for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
-            Cell referenceCell = board.getCell(row, col);
-            if (referenceCell.isEditable()) {
-               referenceCell.addKeyListener(new mistakeListener());
-            }
-         }
-      }
-
-      // ---------- status bar -----------
+      // STATUSBAR (sub of main)
       statusBar = new JPanel();
-      statusBar.add(new JTransparentLabel("Cells left: "));
-      lblCellsLeft = new JLabel("" + cellsLeft);
-      statusBar.add(lblCellsLeft);
+      
+      // MISTAKES (sub of statusbar (sub of main)) 
+      lblMistakes.setOpaque(false);
+      lblMistakes.add(new JTransparentLabel("Mistakes: " + mistakesCount));
+      lblMistakes.setBorder(BorderFactory.createEmptyBorder(8, 50, 8, 50));
+      statusBar.add(lblMistakes);
+      // ---------- END OF MISTAKES (sub of statusbar (sub of main)) ----------
 
-      // add background music (when game started)
+      // CELLSLEFT (sub of statusbar (sub of main))
+      lblCellsLeft = new JLabel("Cells left: " + cellsLeft);
+      lblCellsLeft.setBorder(BorderFactory.createEmptyBorder(8, 50, 8, 50));
+      statusBar.add(lblCellsLeft);
+      // ---------- END OF CELLSLEFT (sub of statusbar (sub of main)) ----------
+      
+      
+      // HINTS (sub of statusbar (sub of main))
+      lblHintLeft.setBorder(BorderFactory.createEmptyBorder(8, 50, 8, 50));
+      statusBar.add(lblHintLeft);
+      // ---------- END OF HINTS (sub of statusbar (sub of main)) ----------
+      statusBar.setOpaque(false);
+      // ---------- END OF STATUSBAR (sub of main)
+      // ---------- END OF MAIN ----------
+
+
+
+      // Background Music (when game started)
       soundStream = AudioSystem.getAudioInputStream(new File("sudoku/bg_music_sudoku.wav"));
       bgMusic = AudioSystem.getClip();
       bgMusic.open(soundStream);
 
-      // Setting menubar
-      menubar.toggleSoundItem.addActionListener(new ActionListener() {
+
+      // MENUBAR
+      menubar.newGameItem.addActionListener(new restartGame());
+      menubar.restartGameItem.addActionListener(new resetGame());
+      menubar.getHintItem.addActionListener(new hintListener());
+      menubar.toggleThemeItem.addActionListener(new toggleTheme());      menubar.toggleSoundItem.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent evt){
             if(menubar.toggleSoundItem.getText().equals("Disable Sound")){
@@ -192,12 +181,11 @@ public class SudokuMain extends JFrame {
          }
       });
 
-      menubar.getHintItem.addActionListener(new hintListener());
-
-      // add menu bar
       setJMenuBar(menubar.menubar);
+      // ---------- END OF MENUBAR ----------
 
-      // template for Frame
+
+      // Frame Template
       pack(); // Pack the UI components, instead of using setSize()
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // to handle window-closing
       setTitle("Sudoku");
@@ -222,61 +210,84 @@ public class SudokuMain extends JFrame {
    private void StartGame() {
       Container cp = getContentPane();
 
+      // Background Panel of Main Sudoku
       imgPath = GameBoardPanel.isDarkMode? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
       backcp = new MainBackground(imgPath);
       backcp.setLayout(new BorderLayout());
 
-      // top contianer
-      JPanel topPane = new JPanel();
-      topPane.setLayout(new GridLayout(1, 2));
-      topPane.setOpaque(false);
+      // TOP PANE (consisting of header)
       topPane.add(header);
       topPane.add(new EmptyPanel());
+      topPane.setOpaque(false);
       backcp.add(topPane, BorderLayout.NORTH);
+      // ----- END OF TOP PANE -----
+
+      // BOTTOM PANE (consisting of statusbar)
+      bottomPane.add(statusBar);
+      bottomPane.add(new EmptyPanel());
+      bottomPane.setOpaque(false);
+      backcp.add(bottomPane, BorderLayout.SOUTH);
+      // ----- END OF BOTTOM PANE -----
+      
+
       backcp.add(new EmptyPanel(), BorderLayout.WEST);
 
-      sidebar.setOpaque(false);
-      header.setOpaque(false);
-      statusBar.setOpaque(false);
 
-      // for sudoku pane and empty pane
-      JPanel centerPane = new JPanel();
-      centerPane.setLayout(new GridLayout(1, 2));
-      centerPane.setOpaque(false);
-      backcp.add(centerPane, BorderLayout.CENTER);
+      // CENTER PANEL (consisting of sudokupanel and toolspanel)
+      JPanel centerPanel = new JPanel();
+      centerPanel.setLayout(new GridLayout(1, 2));
+      backcp.add(centerPanel, BorderLayout.CENTER);
 
-      // adding sudoku pane to left half of center Pane
+      // SUDOKU PANEL (sub of centerpanel)
       JPanel sudokuPane = new JPanel(new BorderLayout());
       sudokuPane.setOpaque(false);
       sudokuPane.setLayout(new BorderLayout());
       sudokuPane.add(board, BorderLayout.CENTER);
       sudokuPane.add(board);
-      sudokuPane.add(statusBar, BorderLayout.SOUTH);
-      board.setOpaque(false);
-      // board.setBackground(Color.BLACK);
-      centerPane.add(sudokuPane);
+      sudokuPane.setOpaque(false);
+      centerPanel.add(sudokuPane);
+      // ---------- END OF SUDOKU PANEL (sub of centerpanel)
 
-      // side bar container at the right
-      JPanel sideBarContainer = new JPanel();
+      // TOOLS PANEL (sub of centerpanel)
+      toolsPanel = new RightPane();
+      cellBoxesPanel = new BoxesLeft();
+      cellBoxesPanel.setOpaque(false);
+      sidebar = toolsPanel.getSideBar();
+      sidebar.add(new EmptyPanel());
+      sidebar.add(cellBoxesPanel);
+      sidebar.add(new EmptyPanel());
+      sidebar.setOpaque(false);
+      centerPanel.add(toolsPanel);
+      toolsPanel.setOpaque(false);
+      // ---------- END OF TOOLS PANEL (sub of centerpanel)
+      centerPanel.setOpaque(false);
+      // ---------- END OF CENTER PANEL ----------
       
-      sideBarContainer.setLayout(new GridLayout(1, 2));
-      sideBarContainer.add(sidebar);
-      sideBarContainer.add(new EmptyPanel());
-      sideBarContainer.setOpaque(false);
-      centerPane.add(sideBarContainer);
+      // Add everything to Content Pane
+      cp.add(backcp);
 
-      // header allignment
-      header.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+
+      // Start game
       board.newGame();
+      board.setOpaque(false);
+
+      // Initialize CELLSLEFT
       cellsLeft = board.getCellsLeft();
-      lblCellsLeft.setText("" + cellsLeft);
+      lblCellsLeft.setText("Cells left: " + cellsLeft);
+
+      //Begin Timer and Music Background
       timer.start();
       bgMusic.setFramePosition(0);
       bgMusic.start();
       bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-      cp.add(backcp);
+      // Initialize Box Count
+      initializeBoxCount();
 
+      // Recolor Font
+      recolorFont();
+
+      // Pack the frame
       pack();
    }
 
@@ -302,15 +313,56 @@ public class SudokuMain extends JFrame {
       start.getDifficultyButton("insane").setEnabled(false);
    }
 
+   private void initializeBoxCount() {
+      for (int r=0; r<9; ++r) {
+         for (int c=0; c<9; ++c) {
+            Cell referenceCell = board.getCell(r, c);
+            int cellNumber = referenceCell.number-1;
+            if (referenceCell.status == CellStatus.GIVEN) {
+               boxesCount[cellNumber] += 1;
+            }
+         }
+      }
+   }
+
+   public void recolorFont() {
+      if (GameBoardPanel.isDarkMode) {
+         lblCellsLeft.setForeground(Cell.FG_GIVEN_DARK);
+         lblHintLeft.setForeground(Cell.FG_GIVEN_DARK);
+         lblMistakes.setForeground(Cell.FG_GIVEN_DARK);
+         lblCellsLeft.setForeground(Cell.FG_GIVEN_DARK);
+         lblTime.setForeground(Cell.FG_GIVEN_DARK);
+
+         JButton[] cellBoxesArray = cellBoxesPanel.getCellBoxes();
+         for (int i=0; i<9; ++i) {
+            JButton referenceBox = cellBoxesArray[i];
+            referenceBox.setForeground(Cell.FG_GIVEN_DARK);
+            referenceBox.setBackground(Cell.BG_GIVEN_ODD_DARK);
+         }
+      } else {
+         lblTime.setForeground(Cell.FG_GIVEN_LIGHT);
+         lblHintLeft.setForeground(Cell.FG_GIVEN_LIGHT);
+         lblMistakes.setForeground(Cell.FG_GIVEN_LIGHT);
+         lblCellsLeft.setForeground(Cell.FG_GIVEN_LIGHT);
+         lblTime.setForeground(Cell.FG_GIVEN_LIGHT);
+
+         JButton[] cellBoxesArray = cellBoxesPanel.getCellBoxes();
+         for (int i=0; i<9; ++i) {
+            JButton referenceBox = cellBoxesArray[i];
+            referenceBox.setForeground(Cell.FG_GIVEN_LIGHT);
+            referenceBox.setBackground(Cell.BG_GIVEN_ODD_LIGHT);
+         }
+      }
+   }
    private class resetGame implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
          timer.stop();
          timer.start();
-         lblMistakesCount.setText("0");
+         lblMistakes.setText("Mistakes: 0");
          lblTime.setText("00:00");
          hintCount = 3;
-         lblHintLeft.setText("3");
+         lblHintLeft.setText("Hints Left: " + hintCount);
 
          for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
             for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
@@ -323,7 +375,7 @@ public class SudokuMain extends JFrame {
             }
          }
          cellsLeft = board.getCellsLeft();
-         lblCellsLeft.setText("" + cellsLeft);
+         lblCellsLeft.setText("Cells Left: " + cellsLeft);
          for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
             for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
                Cell referenceCell = board.getCell(row, col);
@@ -333,22 +385,27 @@ public class SudokuMain extends JFrame {
                }
             }
          }
+
+         initializeBoxCount();
+         recolorFont();
       }
    }
 
    private class restartGame implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
-         lblMistakesCount.setText("0");
+         lblMistakes.setText("Mistakes: 0");
          lblTime.setText("00:00");
          cellsLeft = board.getCellsLeft();
-         lblCellsLeft.setText("" + cellsLeft);
+         lblCellsLeft.setText("Cells Left: " + cellsLeft);
          hintCount = 3;
-         lblHintLeft.setText("3");
+         lblHintLeft.setText("Hints Left: " + hintCount);
          timer.stop();
          timer.start();
          seconds = 0;
          board.newGame();
+         initializeBoxCount();
+         recolorFont();
       }
    }
 
@@ -369,8 +426,8 @@ public class SudokuMain extends JFrame {
          hintCount--;
          if (referenceCell.status == CellStatus.TO_GUESS && hintCount >= 0) {
             cellsLeft -= 1;
-            lblCellsLeft.setText("" + cellsLeft);
-            lblHintLeft.setText("" + hintCount);
+            lblCellsLeft.setText("Cells Left: " + cellsLeft);
+            lblHintLeft.setText("Hints Left: " + hintCount);
             referenceCell.setText("" + referenceCell.number);
             referenceCell.status = CellStatus.CORRECT_GUESS;
             referenceCell.paint();
@@ -387,56 +444,11 @@ public class SudokuMain extends JFrame {
                board.getCell(row, col).paint();
             }
          }
+         recolorFont();
          imgPath = GameBoardPanel.isDarkMode? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
          backcp.setBackgroundImage(imgPath);
          backcp.revalidate();
          backcp.repaint();
-      }
-   }
-
-   private class mistakeListener implements KeyListener {
-      @Override
-      public void keyTyped(KeyEvent evt) {
-         Cell sourceCell = (Cell) evt.getSource();
-
-         char key = evt.getKeyChar();
-         if (!sourceCell.isEditable())
-            return;
-
-         if ((key - '0' > 0 && key - '0' <= 9)) {
-            int numberIn = key - '0';
-            if (numberIn == sourceCell.number) {
-               sourceCell.status = CellStatus.CORRECT_GUESS;
-               cellsLeft--;
-               lblCellsLeft.setText("" + cellsLeft);
-               sourceCell.setEditable(false);
-            } else {
-               sourceCell.status = CellStatus.WRONG_GUESS;
-               int tmp = Integer.parseInt((lblMistakesCount.getText()));
-               tmp++;
-               lblMistakesCount.setText(Integer.toString(tmp));
-               System.out.println(lblMistakesCount.getText());
-            }
-            numberIn = numberIn % 10;
-            sourceCell.setText(Integer.toString(numberIn));
-            evt.consume();
-            sourceCell.paint();
-         } else if (key == 8) {
-            // if input is backspace
-            sourceCell.status = CellStatus.TO_GUESS;
-            sourceCell.paint();
-         } else {
-            System.out.println("Invalid input");
-            evt.consume();
-         }
-      }
-
-      @Override
-      public void keyPressed(KeyEvent evt) {
-      }
-
-      @Override
-      public void keyReleased(KeyEvent evt) {
       }
    }
 }

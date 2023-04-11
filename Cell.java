@@ -13,17 +13,6 @@ import javax.swing.JTextField;
  */
 public class Cell extends JTextField {
    private static final long serialVersionUID = 1L;  // to prevent serial warning
-
-   // Define named constants for JTextField's colors and fonts
-   //  to be chosen based on CellStatus
-   // public static final Color BG_GIVEN = new Color(240, 240, 240); // RGB
-   // public static final Color FG_GIVEN = Color.BLACK;
-   // public static final Color FG_NOT_GIVEN = Color.GRAY;
-   // public static final Color BG_TO_GUESS  = Color.YELLOW;
-   // public static final Color BG_CORRECT_GUESS = new Color(0, 216, 0);
-   // public static final Color BG_WRONG_GUESS   = new Color(216, 0, 0);
-   // public static final Font FONT_NUMBERS = new Font("OCR A Extended", Font.PLAIN, 28);
-
    
    public static final Color LightBeige = new Color(230, 211, 173);
    public static final Color PaleYellow = new Color(242, 232, 196);
