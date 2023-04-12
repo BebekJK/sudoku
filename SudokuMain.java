@@ -1,5 +1,3 @@
-package sudoku;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -18,7 +16,7 @@ public class SudokuMain extends JFrame {
    // private variables
    // panel
    GameBoardPanel board = new GameBoardPanel();
-   JPanel sidebar, header, statusBar;
+   JPanel sidebar, header, statusBar, centerPanel = new JPanel();
    RightPane toolsPanel;
    MainBackground backcp;
    StartingPanel start = new StartingPanel();
@@ -88,7 +86,7 @@ public class SudokuMain extends JFrame {
       statusBar.add(lblHintLeft);
       statusBar.setOpaque(false);
 
-      soundStream = AudioSystem.getAudioInputStream(new File("sudoku/bg_music_sudoku.wav"));
+      soundStream = AudioSystem.getAudioInputStream(new File("bg_music_sudoku.wav"));
       bgMusic = AudioSystem.getClip();
       bgMusic.open(soundStream);
 
@@ -124,6 +122,7 @@ public class SudokuMain extends JFrame {
       });
    }
 
+   /*---------------------------------- functions ---------------------------------- */
    private void StartGame() {
       setMainLayout();
       // Start game
@@ -134,12 +133,6 @@ public class SudokuMain extends JFrame {
       cellsLeft = board.getCellsLeft();
       lblCellsLeft.setText("Cells left: " + cellsLeft);
 
-      // Begin Timer and Music Background
-      timer.start();
-      bgMusic.setFramePosition(0);
-      bgMusic.start();
-      bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
-
       // Initialize Box Count and Listener
       initializeBoxCount();
       initializeBoxFunction();
@@ -147,11 +140,13 @@ public class SudokuMain extends JFrame {
       // Recolor Font
       recolorFont();
 
+      // Give instructions
+      openInstructions();
+
       // Pack the frame
       pack();
    }
 
-   /*---------------------------------- functions ---------------------------------- */
    private void setStartEnabled() {
       start.getStartButton().setEnabled(true);
    }
@@ -214,7 +209,7 @@ public class SudokuMain extends JFrame {
    private void setMainLayout() {
       Container cp = getContentPane();
       // Background Panel of Main Sudoku
-      imgPath = GameBoardPanel.isDarkMode ? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
+      imgPath = GameBoardPanel.isDarkMode ? "bgdark.jpeg" : "bglight.png";
       backcp = new MainBackground(imgPath);
       backcp.setLayout(new BorderLayout());
 
@@ -235,7 +230,6 @@ public class SudokuMain extends JFrame {
       backcp.add(new EmptyPanel(), BorderLayout.WEST);
 
       // CENTER PANEL (consisting of sudokupanel and toolspanel)
-      JPanel centerPanel = new JPanel();
       centerPanel.setLayout(new GridLayout(1, 2));
       backcp.add(centerPanel, BorderLayout.CENTER);
 
@@ -261,6 +255,43 @@ public class SudokuMain extends JFrame {
       centerPanel.setOpaque(false);
 
       cp.add(backcp);
+   }
+
+   private void openInstructions() {
+      pauseGameState();
+      String message = "<html><body style='width: 250px;'> <h3>Game Rules</h3> <ol><li style='padding-bottom: 5px;'>Each number between 1 and 9 only appear once for every row, column, and 3x3 subgrid.</li> <li style='padding-bottom: 5px;'>If you make 10 mistakes, you lose.</li> <li style='padding-bottom: 5px;'>You are given 3 hints which are assigned randomly.</li> <li style='padding-bottom: 5px;'>Each level differs on the number of cells to guess (Easy: 32, Medium: 45, Hard: 54, Insane: 64).</li> <li>Good luck and have fun playing!</li></ol> </html></body>";
+      JOptionPane pane = new JOptionPane(message);
+      JDialog dialog = pane.createDialog("Instructions");
+      dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      dialog.setModal(true);
+      dialog.setVisible(true);
+
+      // Get the result from the JOptionPane
+      int res = (int) pane.getValue();
+      if (res == 0) { // have been clicked
+         timer.start();
+         beginGameState();
+      }
+   }
+
+   private void beginGameState() {
+      // Begin Timer and Music Background
+      timer.start();
+      bgMusic.start();
+      bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
+      centerPanel.setVisible(true);
+      toolsPanel.setVisible(true);
+      topPane.setVisible(true);
+      bottomPane.setVisible(true);
+   }
+
+   private void pauseGameState() {
+      timer.stop();
+      bgMusic.stop();
+      centerPanel.setVisible(false);
+      toolsPanel.setVisible(false);
+      topPane.setVisible(false);
+      bottomPane.setVisible(false);
    }
 
    /*---------------------------------- Action Listener ---------------------------------- */
@@ -510,8 +541,7 @@ public class SudokuMain extends JFrame {
    private class instructionListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent evt) {
-         String message = "<html><body style='width: 250px;'> <h3>Game Rules</h3> <ol><li style='padding-bottom: 5px;'>Each number between 1 and 9 only appear once for every row, column, and 3x3 subgrid.</li> <li style='padding-bottom: 5px;'>If you make 10 mistakes, you lose.</li> <li style='padding-bottom: 5px;'>You are given 3 hints which are assigned randomly.</li> <li style='padding-bottom: 5px;'>Each level differs on the number of cells to guess (Easy: 32, Medium: 45, Hard: 54, Insane: 64).</li> <li>Good luck and have fun playing!</li></ol> </html></body>";
-         JOptionPane.showMessageDialog(getContentPane(), message, "Instruction", 1);
+         openInstructions();
       }
    }
 }

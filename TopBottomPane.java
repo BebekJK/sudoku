@@ -1,5 +1,3 @@
-package sudoku;
-
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 

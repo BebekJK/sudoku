@@ -1,8 +1,5 @@
-package sudoku;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -101,7 +98,7 @@ public class StartingPanel extends JPanel {
     public void setBackgroundImage() {
         try {
             backgroundImage = ImageIO
-                    .read(new File(GameBoardPanel.isDarkMode ? "sudoku/bgdark.jpeg" : "sudoku/bglight.png"));
+                    .read(new File(GameBoardPanel.isDarkMode ? "bgdark.jpeg" : "bglight.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

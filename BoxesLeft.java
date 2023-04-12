@@ -1,7 +1,6 @@
-package sudoku;
+
 
 import java.awt.*;
-
 import javax.swing.*;
 
 public class BoxesLeft extends JPanel {

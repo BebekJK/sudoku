@@ -1,5 +1,3 @@
-package sudoku;
-
 /**
  * An enumeration of constants to represent the status
  * of each cell.

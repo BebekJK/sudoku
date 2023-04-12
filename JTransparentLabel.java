@@ -1,7 +1,4 @@
-package sudoku;
-
 import java.awt.*;
-
 import javax.swing.*;
 
 public class JTransparentLabel extends JLabel {
