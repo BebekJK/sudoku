@@ -264,7 +264,7 @@ public class SudokuMain extends JFrame {
       pauseGameState();
       String message = "<html><body style='width: 250px;'> <h3>Game Rules</h3> <ol><li style='padding-bottom: 5px;'>Each number between 1 and 9 only appear once for every row, column, and 3x3 subgrid.</li> <li style='padding-bottom: 5px;'>If you make 10 mistakes, you lose.</li> <li style='padding-bottom: 5px;'>You are given 3 hints which are assigned randomly.</li> <li style='padding-bottom: 5px;'>Each level differs on the number of cells to guess (Easy: 32, Medium: 45, Hard: 54, Insane: 64).</li> <li>Good luck and have fun playing!</li></ol> </html></body>";
       JOptionPane pane = new JOptionPane(message);
-      JDialog dialog = pane.createDialog("Instructions");
+      JDialog dialog = pane.createDialog(getContentPane(), "Instructions");
       dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
       dialog.setModal(true);
       dialog.setVisible(true);
@@ -571,7 +571,7 @@ public class SudokuMain extends JFrame {
          if (board.isGameOver()) {
             SudokuMain.timer.stop();
             gameOverPane = new JOptionPane("You Lost, please start a new game!");
-            JDialog dialog = gameOverPane.createDialog("Instructions");
+            JDialog dialog = gameOverPane.createDialog(getContentPane(), "Game Over!");
             dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             dialog.setModal(true);
             dialog.setVisible(true);
