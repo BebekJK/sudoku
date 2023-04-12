@@ -1,7 +1,6 @@
 package sudoku;
 
 import java.awt.*;
-import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -19,15 +18,6 @@ public class BoxesLeft extends JPanel {
             cellBoxes[i].setText("" + (i+1));
             cellBoxes[i].setHorizontalAlignment(JTextField.CENTER);
             cellBoxes[i].setFont(Cell.FONT_NUMBERS);
-            cellBoxes[i].addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    int newWidth = (int) (getWidth() * 0.8);
-                    setSize(newWidth, getHeight());
-                    revalidate();
-                    repaint();
-                }
-            });
             add(cellBoxes[i]);
         }
     }

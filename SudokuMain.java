@@ -166,7 +166,9 @@ public class SudokuMain extends JFrame {
       menubar.newGameItem.addActionListener(new restartGame());
       menubar.restartGameItem.addActionListener(new resetGame());
       menubar.getHintItem.addActionListener(new hintListener());
-      menubar.toggleThemeItem.addActionListener(new toggleTheme());      
+      menubar.toggleThemeItem.addActionListener(new toggleTheme());     
+      menubar.aboutItem.addActionListener(new aboutUsListener()); 
+      menubar.instructionsItem.addActionListener(new instructionListener());
       // menubar.exitGameItem.addActionListener(new exitGame());
       menubar.toggleSoundItem.addActionListener(new ActionListener() {
          @Override
@@ -347,14 +349,21 @@ public class SudokuMain extends JFrame {
       JButton[] cellBoxesArray = cellBoxesPanel.getCellBoxes();
       for (int i=0; i<9; ++i) {
          JButton referenceBox = cellBoxesArray[i];
-         referenceBox.setForeground(GameBoardPanel.isDarkMode? Cell.FG_GIVEN_DARK: Cell.FG_GIVEN_LIGHT);
-         referenceBox.setBackground(GameBoardPanel.isDarkMode? Cell.BG_GIVEN_ODD_DARK: Cell.FG_NOT_GIVEN_LIGHT);
+         referenceBox.setForeground(Cell.FG_GIVEN_LIGHT);
+         // referenceBox.setBackground(GameBoardPanel.isDarkMode? Cell.BG_GIVEN_ODD_DARK: Cell.FG_NOT_GIVEN_LIGHT);
       }
    }
 
    private class resetGame implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
+         for(int row=0;row<9;row++){
+            for(int col=0;col<9;col++){
+               board.getCell(row, col).disabled = false;
+               repaint();
+            }
+         }
+         
          timer.stop();
          timer.start();
          mistakesCount = 0;
@@ -451,16 +460,23 @@ public class SudokuMain extends JFrame {
       @Override
       public void actionPerformed(ActionEvent evt) {
          GameBoardPanel.isDarkMode = !GameBoardPanel.isDarkMode;
-         for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-               board.getCell(row, col).paint();
+         try{
+            for (int row = 0; row < 9; row++) {
+               for (int col = 0; col < 9; col++) {
+                  board.getCell(row, col).paint();
+               }
             }
+            recolorFont();
+            imgPath = GameBoardPanel.isDarkMode? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
+            backcp.setBackgroundImage(imgPath);
+            backcp.revalidate();
+            backcp.repaint();
+         } catch(Exception e){
+            start.setBackgroundImage();
+            revalidate();
+            repaint();
          }
-         recolorFont();
-         imgPath = GameBoardPanel.isDarkMode? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
-         backcp.setBackgroundImage(imgPath);
-         backcp.revalidate();
-         backcp.repaint();
+         
       }
    }
 
@@ -470,10 +486,7 @@ public class SudokuMain extends JFrame {
          JButton pressedButton = (JButton) evt.getSource();
          int pressedNumber = Integer.parseInt(pressedButton.getText());
 
-         pressedButton.setOpaque(true);
-         // pressedButton.setHighlight(GameBoardPanel.isDarkMode? Cell.BG_GIVEN_ODD_DARK: Cell.FG_NOT_GIVEN_LIGHT);
-
-         System.out.println(pressedButton.getBackground());
+         pressedButton.setForeground(Color.RED);
          for(int row=0; row<9; row++){
             for(int col=0; col<9; col++){
                Cell currCell = board.getCell(row, col);
@@ -491,6 +504,7 @@ public class SudokuMain extends JFrame {
          JButton pressedButton = (JButton) evt.getSource();
          int pressedNumber = Integer.parseInt(pressedButton.getText());
 
+         pressedButton.setForeground(Color.BLACK);
          for(int row=0; row<9; row++){
             for(int col=0; col<9; col++){
                Cell currCell = board.getCell(row, col);
@@ -504,21 +518,19 @@ public class SudokuMain extends JFrame {
       }
    }
 
-   private class exitGame implements ActionListener{
+   private class aboutUsListener implements ActionListener{
       @Override
       public void actionPerformed(ActionEvent evt){
-         bgMusic.stop();
-         SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-               try {
-                  dispose();
-                  new SudokuMain();
-               } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                  e.printStackTrace();
-               }
-            }
-         });
+         String message = "<html><body style='width: 250px;'> <p>Dear players,</p> <p></p> <p>Welcome to our Sudoku game, created for our Object Oriented Programming (IM1003) course at NTU. Our team of passionate programmers came together to create an enjoyable Sudoku experience. Our game is intuitive with various difficulty levels, and offers an opportunity to sharpen your problem solving skills. We hope you enjoy playing our Sudoku game and thank you for choosing our game.</p> <p style='padding-top: 30px; padding-bottom: 10px;'>Regards, </p> <p>Developers Team;</p></body></html>";
+         JOptionPane.showMessageDialog(getContentPane(), message, "About Us", 1);
+      }
+   }
+
+   private class instructionListener implements ActionListener{
+      @Override
+      public void actionPerformed(ActionEvent evt){
+         String message = "<html><body style='width: 250px;'> <h3>Game Rules</h3> <ol><li style='padding-bottom: 5px;'>Each number between 1 and 9 only appear once for every row, column, and 3x3 subgrid.</li> <li style='padding-bottom: 5px;'>If you make 10 mistakes, you lose.</li> <li style='padding-bottom: 5px;'>You are given 3 hints which are assigned randomly.</li> <li style='padding-bottom: 5px;'>Each level differs on the number of cells to guess (Easy: 32, Medium: 45, Hard: 54, Insane: 64).</li> <li>Good luck and have fun playing!</li></ol> </html></body>";
+         JOptionPane.showMessageDialog(getContentPane(), message, "Instruction", 1);
       }
    }
 }

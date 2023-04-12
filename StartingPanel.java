@@ -70,11 +70,8 @@ public class StartingPanel extends JPanel{
         startingComponentsPanel.add(usernameField);
         startingComponentsPanel.add(difficultyPanel);
         startingComponentsPanel.add(startButton);
-        try {
-            backgroundImage = ImageIO.read(new File("sudoku/bglight.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        
+        setBackgroundImage();
 
         add(startingComponentsPanel);
         // Set the panel to fill the entire frame
@@ -105,6 +102,13 @@ public class StartingPanel extends JPanel{
         }
     }
 
+    public void setBackgroundImage(){
+        try {
+            backgroundImage = ImageIO.read(new File(GameBoardPanel.isDarkMode?"sudoku/bgdark.jpeg":"sudoku/bglight.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

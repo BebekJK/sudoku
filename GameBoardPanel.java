@@ -207,6 +207,7 @@ public class GameBoardPanel extends JPanel {
       public void keyReleased(KeyEvent evt) {
          Cell sourceCell = (Cell) evt.getSource();
          sourceCell.paint();
+         sourceCell.requestFocus();
       }
    }
 
@@ -240,50 +241,16 @@ public class GameBoardPanel extends JPanel {
       public void focusGained(FocusEvent evt) {
          Cell sourceCell = (Cell) evt.getComponent();
          sourceCell.focus = true;
+         sourceCell.mainFocus = true;
          sourceCell.paint();
-
-         int currRow = sourceCell.row;
-         int currCol = sourceCell.col;
-         cells[currRow][currCol].mainFocus = true;
-         for (int row = 0; row < 9; row++) {
-            cells[row][currCol].focus = true;
-            cells[row][currCol].paint();
-         }
-         for (int col = 0; col < 9; col++) {
-            cells[currRow][col].focus = true;
-            cells[currRow][col].paint();
-         }
-         for (int row = currRow / 3 * 3; row < currRow / 3 * 3 + 3; ++row) {
-            for (int col = currCol / 3 * 3; col < currCol / 3 * 3 + 3; ++col) {
-               cells[row][col].focus = true;
-               cells[row][col].paint();
-            }
-         }
       }
 
       @Override
       public void focusLost(FocusEvent evt) {
          Cell sourceCell = (Cell) evt.getComponent();
          sourceCell.focus = false;
+         sourceCell.mainFocus = false;
          sourceCell.paint();
-
-         int currRow = sourceCell.row;
-         int currCol = sourceCell.col;
-         cells[currRow][currCol].mainFocus = false;
-         for (int row = 0; row < 9; row++) {
-            cells[row][currCol].focus = false;
-            cells[row][currCol].paint();
-         }
-         for (int col = 0; col < 9; col++) {
-            cells[currRow][col].focus = false;
-            cells[currRow][col].paint();
-         }
-         for (int row = currRow / 3 * 3; row < currRow / 3 * 3 + 3; ++row) {
-            for (int col = currCol / 3 * 3; col < currCol / 3 * 3 + 3; ++col) {
-               cells[row][col].focus = false;
-               cells[row][col].paint();
-            }
-         }
       }
    }
 

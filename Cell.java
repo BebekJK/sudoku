@@ -15,7 +15,7 @@ public class Cell extends JTextField {
    private static final long serialVersionUID = 1L;  // to prevent serial warning
    
    public static final Color LightBeige = new Color(230, 211, 173);
-   public static final Color PaleYellow = new Color(242, 232, 196);
+   public static final Color PaleYellow = new Color(252, 242, 196);
    public static final Color LightBlue = new Color(130, 207, 253);
    public static final Color White = new Color(255,255,255);
    public static final Color LightRed = new Color(255,117,117);
