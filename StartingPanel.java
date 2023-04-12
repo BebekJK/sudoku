@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class StartingPanel extends JPanel{
+public class StartingPanel extends JPanel {
     private PlaceholderTextField usernameField;
     private JButton startButton;
     private JButton easy, medium, hard, insane;
@@ -18,7 +18,6 @@ public class StartingPanel extends JPanel{
     public StartingPanel() {
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         setPreferredSize(new Dimension(GameBoardPanel.BOARD_WIDTH, GameBoardPanel.BOARD_HEIGHT));
-  
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -30,11 +29,11 @@ public class StartingPanel extends JPanel{
         });
 
         System.out.println(getHeight());
-        
+
         JPanel startingComponentsPanel = new JPanel();
-        startingComponentsPanel.setPreferredSize(new Dimension(400,150));
+        startingComponentsPanel.setPreferredSize(new Dimension(400, 150));
         startingComponentsPanel.setOpaque(false);
-        startingComponentsPanel.setLayout(new GridLayout(3,1));
+        startingComponentsPanel.setLayout(new GridLayout(3, 1));
         startingComponentsPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -48,8 +47,8 @@ public class StartingPanel extends JPanel{
         usernameField.setPlaceholder("input your username...");
 
         JPanel difficultyPanel = new JPanel();
-        difficultyPanel.setLayout(new GridLayout(1,5));
-        
+        difficultyPanel.setLayout(new GridLayout(1, 5));
+
         easy = new JButton("Easy");
         medium = new JButton("Medium");
         hard = new JButton("Hard");
@@ -59,56 +58,55 @@ public class StartingPanel extends JPanel{
         difficultyPanel.add(hard);
         difficultyPanel.add(insane);
         difficultyPanel.setOpaque(false);
-    
-        
-    
-        startButton = new JButton("Start Game");
-        
 
-        // startingComponentsPanel.add(new JLabel("Username", SwingConstants.CENTER), BorderLayout.NORTH);
-        
+        startButton = new JButton("Start Game");
+
+        // startingComponentsPanel.add(new JLabel("Username", SwingConstants.CENTER),
+        // BorderLayout.NORTH);
+
         startingComponentsPanel.add(usernameField);
         startingComponentsPanel.add(difficultyPanel);
         startingComponentsPanel.add(startButton);
-        
+
         setBackgroundImage();
 
         add(startingComponentsPanel);
         // Set the panel to fill the entire frame
-        
+
     }
-    
-    
 
     public JButton getStartButton() {
         return startButton;
     }
-    public JTextField getUserName(){
+
+    public JTextField getUserName() {
         return usernameField;
     }
 
-    public JButton getDifficultyButton(String type){
-        switch(type){
+    public JButton getDifficultyButton(String type) {
+        switch (type) {
             case "easy":
                 return easy;
             case "medium":
                 return medium;
-            case "hard": 
+            case "hard":
                 return hard;
-            case "insane": 
+            case "insane":
                 return insane;
-            default: 
+            default:
                 return new JButton();
         }
     }
 
-    public void setBackgroundImage(){
+    public void setBackgroundImage() {
         try {
-            backgroundImage = ImageIO.read(new File(GameBoardPanel.isDarkMode?"sudoku/bgdark.jpeg":"sudoku/bglight.png"));
+            backgroundImage = ImageIO
+                    .read(new File(GameBoardPanel.isDarkMode ? "sudoku/bgdark.jpeg" : "sudoku/bglight.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

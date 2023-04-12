@@ -8,19 +8,17 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-public class MainBackground extends JPanel{
+
+public class MainBackground extends JPanel {
     private BufferedImage backgroundImage;
 
-    public MainBackground(String imagePath){
+    public MainBackground(String imagePath) {
         setLayout(new BorderLayout());
         try {
             backgroundImage = ImageIO.read(new File(imagePath));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    
-        // Set the panel to fill the entire frame
-        // setPreferredSize(new Dimension(GameBoardPanel.BOARD_WIDTH, GameBoardPanel.BOARD_HEIGHT));
     }
 
     @Override
@@ -29,18 +27,11 @@ public class MainBackground extends JPanel{
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
     }
 
-    public void setBackgroundImage(String imagePath){
+    public void setBackgroundImage(String imagePath) {
         try {
             backgroundImage = ImageIO.read(new File(imagePath));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    // public static void main(String[] args) {
-    //     JFrame frame = new JFrame("Background Image Panel");
-    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     frame.setSize(400, 400);
-    //     frame.setContentPane(new MainBackground());
-    //     frame.setVisible(true);
-    // }
 }

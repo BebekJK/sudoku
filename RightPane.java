@@ -5,6 +5,7 @@ import javax.swing.*;
 
 public class RightPane extends JPanel {
     private JPanel leftHalfPage;
+
     public RightPane() {
         // divide page by half
         setLayout(new GridLayout(1, 2));

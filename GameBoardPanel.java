@@ -26,7 +26,6 @@ public class GameBoardPanel extends JPanel {
    public static GameDifficulty difficulty;
    private int cellsToGuess;
 
-
    /** Constructor */
    public GameBoardPanel() {
       super.setLayout(new GridLayout(GRID_SIZE, GRID_SIZE, 2, 2)); // JPanel
@@ -51,7 +50,6 @@ public class GameBoardPanel extends JPanel {
             }
          }
       }
-
 
       super.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
    }
@@ -100,7 +98,7 @@ public class GameBoardPanel extends JPanel {
       return SudokuMain.cellsLeft == 0;
    }
 
-   public boolean isGameOver(){
+   public boolean isGameOver() {
       return SudokuMain.mistakesCount == 10;
    }
 
@@ -116,15 +114,16 @@ public class GameBoardPanel extends JPanel {
    private Boolean isValidInput(char c) {
       return (c - '0' > 0 && c - '0' <= 9);
    }
-   
-   private void disableBoard(){
-      for(int row=0; row<9; row++){
-         for(int col=0; col<9; col++){
+
+   private void disableBoard() {
+      for (int row = 0; row < 9; row++) {
+         for (int col = 0; col < 9; col++) {
             cells[row][col].disabled = true;
             cells[row][col].paint();
          }
       }
    }
+
    class KeyCellInputListener implements KeyListener {
       @Override
       public void keyTyped(KeyEvent evt) {
@@ -143,7 +142,7 @@ public class GameBoardPanel extends JPanel {
                SudokuMain.cellsLeft--;
                SudokuMain.lblCellsLeft.setText("Cells Left: " + SudokuMain.cellsLeft);
 
-               SudokuMain.boxesCount[numberIn-1]++;
+               SudokuMain.boxesCount[numberIn - 1]++;
 
             } else {
                sourceCell.status = CellStatus.WRONG_GUESS;
@@ -164,20 +163,20 @@ public class GameBoardPanel extends JPanel {
             evt.consume();
          }
 
-         for (int boxNumber =0; boxNumber < 9; ++boxNumber) {
+         for (int boxNumber = 0; boxNumber < 9; ++boxNumber) {
             if (SudokuMain.boxesCount[boxNumber] == 9) {
                JButton[] cellBoxesArray = SudokuMain.cellBoxesPanel.getCellBoxes();
                // cellBoxesArray[boxNumber].setBackground(Color.BLACK);
                cellBoxesArray[boxNumber].setEnabled(false);
             }
          }
-         if(isSolved()){
+         if (isSolved()) {
             SudokuMain.timer.stop();
             JOptionPane.showMessageDialog(null, "Congratulations, Puzzle Solved!");
          }
-         if(isGameOver()){
+         if (isGameOver()) {
             SudokuMain.timer.stop();
-            JOptionPane.showMessageDialog(null , "You Lost, please start a new game!");
+            JOptionPane.showMessageDialog(null, "You Lost, please start a new game!");
             disableBoard();
          }
       }
@@ -254,5 +253,4 @@ public class GameBoardPanel extends JPanel {
       }
    }
 
-   
 }

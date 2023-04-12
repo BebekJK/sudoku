@@ -2,8 +2,7 @@ package sudoku;
 
 import javax.swing.*;
 
-
-public class MenuBar{
+public class MenuBar {
     JMenuBar menubar = new JMenuBar();
 
     JMenu fileMenu, gameMenu, helpMenu;
@@ -16,7 +15,6 @@ public class MenuBar{
         fileMenu = new JMenu("File");
         gameMenu = new JMenu("Game");
         helpMenu = new JMenu("Help");
-  
 
         // File Menu : new game, restart game, exit game
         newGameItem = new JMenuItem("New Game");
@@ -25,7 +23,7 @@ public class MenuBar{
         fileMenu.add(newGameItem);
         fileMenu.add(restartGameItem);
         fileMenu.add(exitGameItem);
-  
+
         // Game Menu : toggle theme, toggle music, get hint
         toggleThemeItem = new JMenuItem("Change Theme");
         toggleSoundItem = new JMenuItem("Disable Sound");
@@ -39,7 +37,7 @@ public class MenuBar{
         aboutItem = new JMenuItem("About");
         helpMenu.add(instructionsItem);
         helpMenu.add(aboutItem);
-  
+
         menubar.add(fileMenu);
         menubar.add(gameMenu);
         menubar.add(helpMenu);

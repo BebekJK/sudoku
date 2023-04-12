@@ -4,11 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class DifficultyPanel extends JPanel{
+public class DifficultyPanel extends JPanel {
     private JButton easy, medium, hard, insane;
 
-    public DifficultyPanel(){
-        setLayout(new GridLayout(5,1));
+    public DifficultyPanel() {
+        setLayout(new GridLayout(5, 1));
         easy = new JButton("Easy");
         medium = new JButton("Medium");
         hard = new JButton("Hard");
@@ -23,17 +23,17 @@ public class DifficultyPanel extends JPanel{
         add(insane);
     }
 
-    public JButton getButton(String type){
-        switch(type){
+    public JButton getButton(String type) {
+        switch (type) {
             case "easy":
                 return easy;
             case "medium":
                 return medium;
-            case "hard": 
+            case "hard":
                 return hard;
-            case "insane": 
+            case "insane":
                 return insane;
-            default: 
+            default:
                 return new JButton();
         }
     }
