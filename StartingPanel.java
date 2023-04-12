@@ -47,7 +47,6 @@ public class StartingPanel extends JPanel {
         usernameField.setOpaque(false);
         usernameField.setPlaceholder("input your username...");
 
-
         JPanel difficultyPanel = new JPanel();
         difficultyPanel.setLayout(new GridLayout(1, 4));
 
@@ -102,7 +101,7 @@ public class StartingPanel extends JPanel {
     public void setBackgroundImage() {
         try {
             backgroundImage = ImageIO
-                    .read(new File(GameBoardPanel.isDarkMode ? "bgdark.jpeg" : "bglight.png"));
+                    .read(new File("startingBackground.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
