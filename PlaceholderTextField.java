@@ -2,11 +2,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
 import javax.swing.JTextField;
 
 public class PlaceholderTextField extends JTextField implements FocusListener {
-
     private String placeholder;
     private boolean isPlaceholderSet;
 
@@ -57,8 +55,8 @@ public class PlaceholderTextField extends JTextField implements FocusListener {
 
         if (isPlaceholderSet && !getText().isEmpty()) {
             pG.setColor(Color.GRAY);
-            pG.drawString(placeholder, getInsets().left, pG.getFontMetrics()
-                    .getMaxAscent() + getInsets().top);
+            pG.drawString(placeholder, getInsets().left, pG.getFontMetrics().getMaxAscent() + getInsets().top);
         }
     }
 }
+

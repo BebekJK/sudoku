@@ -23,9 +23,11 @@ public class StartingPanel extends JPanel {
                 setLayout(new FlowLayout(FlowLayout.CENTER, 0, newVerticalGap));
                 revalidate();
             }
-        });
+        }); 
 
         System.out.println(getHeight());
+        JPanel test = new JPanel();
+        test.setLayout(new GridLayout(2, 1));
 
         JPanel startingComponentsPanel = new JPanel();
         startingComponentsPanel.setPreferredSize(new Dimension(400, 150));
@@ -39,12 +41,15 @@ public class StartingPanel extends JPanel {
                 revalidate();
             }
         });
+
         // startingComponentsPanel.setSize();
         usernameField = new PlaceholderTextField();
+        usernameField.setOpaque(false);
         usernameField.setPlaceholder("input your username...");
 
+
         JPanel difficultyPanel = new JPanel();
-        difficultyPanel.setLayout(new GridLayout(1, 5));
+        difficultyPanel.setLayout(new GridLayout(1, 4));
 
         easy = new JButton("Easy");
         medium = new JButton("Medium");
@@ -55,7 +60,6 @@ public class StartingPanel extends JPanel {
         difficultyPanel.add(hard);
         difficultyPanel.add(insane);
         difficultyPanel.setOpaque(false);
-
         startButton = new JButton("Start Game");
 
         // startingComponentsPanel.add(new JLabel("Username", SwingConstants.CENTER),
@@ -65,8 +69,8 @@ public class StartingPanel extends JPanel {
         startingComponentsPanel.add(difficultyPanel);
         startingComponentsPanel.add(startButton);
 
-        setBackgroundImage();
 
+        setBackgroundImage();
         add(startingComponentsPanel);
         // Set the panel to fill the entire frame
 

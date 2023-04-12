@@ -91,8 +91,10 @@ public class SudokuMain extends JFrame {
       bgMusic.open(soundStream);
 
       // -------------MENUBAR-----------------
-      menubar.newGameItem.addActionListener(new restartGame());
-      menubar.restartGameItem.addActionListener(new resetGame());
+      menubar.menubar.setEnabled(false);
+      menubar.menubar.setVisible(false);
+      menubar.newGameItem.addActionListener(new newGame());
+      menubar.newGameItem.addActionListener(new resetGame());
       menubar.getHintItem.addActionListener(new hintListener());
       menubar.toggleThemeItem.addActionListener(new toggleTheme());
       menubar.toggleSoundItem.addActionListener(new toggleSound());
@@ -283,6 +285,8 @@ public class SudokuMain extends JFrame {
       toolsPanel.setVisible(true);
       topPane.setVisible(true);
       bottomPane.setVisible(true);
+      menubar.menubar.setEnabled(true);
+      menubar.menubar.setVisible(true);
    }
 
    private void pauseGameState() {
@@ -292,6 +296,8 @@ public class SudokuMain extends JFrame {
       toolsPanel.setVisible(false);
       topPane.setVisible(false);
       bottomPane.setVisible(false);
+      menubar.menubar.setEnabled(false);
+      menubar.menubar.setVisible(false);
    }
 
    /*---------------------------------- Action Listener ---------------------------------- */
@@ -341,7 +347,7 @@ public class SudokuMain extends JFrame {
       }
    }
 
-   private class restartGame implements ActionListener {
+   private class newGame implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
          for (int row = 0; row < 9; row++) {
