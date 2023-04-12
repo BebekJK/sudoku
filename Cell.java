@@ -49,7 +49,7 @@ public class Cell extends JTextField {
    int row, col;
    /** The puzzle number [1-9] for this cell */
    int number;
-   boolean focus, mainFocus;
+   boolean focus, mainFocus, disabled;
    /** The status of this cell defined in enum CellStatus */
    CellStatus status;
 
@@ -74,6 +74,10 @@ public class Cell extends JTextField {
 
    /** This Cell (JTextField) paints itself based on its status */
    public void paint() {
+      if(disabled){
+         setEditable(false);
+         return;
+      }
       if (status == CellStatus.GIVEN) {
          // Inherited from JTextField: Set display properties
          super.setText(number + "");

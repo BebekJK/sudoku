@@ -100,6 +100,10 @@ public class GameBoardPanel extends JPanel {
       return SudokuMain.cellsLeft == 0;
    }
 
+   public boolean isGameOver(){
+      return SudokuMain.mistakesCount == 10;
+   }
+
    // getter method
    public Cell getCell(int row, int col) {
       return cells[row][col];
@@ -112,7 +116,15 @@ public class GameBoardPanel extends JPanel {
    private Boolean isValidInput(char c) {
       return (c - '0' > 0 && c - '0' <= 9);
    }
-
+   
+   private void disableBoard(){
+      for(int row=0; row<9; row++){
+         for(int col=0; col<9; col++){
+            cells[row][col].disabled = true;
+            cells[row][col].paint();
+         }
+      }
+   }
    class KeyCellInputListener implements KeyListener {
       @Override
       public void keyTyped(KeyEvent evt) {
@@ -162,6 +174,11 @@ public class GameBoardPanel extends JPanel {
          if(isSolved()){
             SudokuMain.timer.stop();
             JOptionPane.showMessageDialog(null, "Congratulations, Puzzle Solved!");
+         }
+         if(isGameOver()){
+            SudokuMain.timer.stop();
+            JOptionPane.showMessageDialog(null , "You Lost, please start a new game!");
+            disableBoard();
          }
       }
 
