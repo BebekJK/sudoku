@@ -17,8 +17,4 @@ public class JTransparentLabel extends JLabel {
         setText(text);
         setForeground(color);
     }
-
-    // public void setFont(Font font){
-    // setFont(font);
-    // }
 }

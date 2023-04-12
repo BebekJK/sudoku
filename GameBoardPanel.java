@@ -19,6 +19,7 @@ public class GameBoardPanel extends JPanel {
    private Cell[][] cells = new Cell[GRID_SIZE][GRID_SIZE];
    /** It also contains a Puzzle with array numbers and isGiven */
    private Puzzle puzzle = new Puzzle();
+   private JOptionPane gameOverPane;
 
    public static GameDifficulty difficulty;
    private int cellsToGuess;
@@ -108,6 +109,10 @@ public class GameBoardPanel extends JPanel {
       return cellsToGuess;
    }
 
+   public JOptionPane getGameOverPane() {
+      return gameOverPane;
+   }
+
    private Boolean isValidInput(char c) {
       return (c - '0' > 0 && c - '0' <= 9);
    }
@@ -170,11 +175,6 @@ public class GameBoardPanel extends JPanel {
          if (isSolved()) {
             SudokuMain.timer.stop();
             JOptionPane.showMessageDialog(null, "Congratulations, Puzzle Solved!");
-         }
-         if (isGameOver()) {
-            SudokuMain.timer.stop();
-            JOptionPane.showMessageDialog(null, "You Lost, please start a new game!");
-            disableBoard();
          }
       }
 

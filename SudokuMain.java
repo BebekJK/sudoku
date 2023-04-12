@@ -22,6 +22,8 @@ public class SudokuMain extends JFrame {
    StartingPanel start = new StartingPanel();
    TopBottomPane topPane = new TopBottomPane(), bottomPane = new TopBottomPane();
    static BoxesLeft cellBoxesPanel;
+   JOptionPane gameOverPane = board.getGameOverPane();
+   int disabledCount;
 
    // label
    static JLabel lblTime = new JLabel("00:00"), lblHintLeft = new JLabel("Hint Left: " + 3),
@@ -93,8 +95,8 @@ public class SudokuMain extends JFrame {
       // -------------MENUBAR-----------------
       menubar.menubar.setEnabled(false);
       menubar.menubar.setVisible(false);
-      menubar.newGameItem.addActionListener(new newGame());
-      menubar.newGameItem.addActionListener(new resetGame());
+      menubar.newGameItem.addActionListener(new newGameListener());
+      menubar.newGameItem.addActionListener(new resetGameListener());
       menubar.getHintItem.addActionListener(new hintListener());
       menubar.toggleThemeItem.addActionListener(new toggleTheme());
       menubar.toggleSoundItem.addActionListener(new toggleSound());
@@ -138,12 +140,11 @@ public class SudokuMain extends JFrame {
       // Initialize Box Count and Listener
       initializeBoxCount();
       initializeBoxFunction();
-
       // Recolor Font
       recolorFont();
-
       // Give instructions
       openInstructions();
+      checkGameOver();
 
       // Pack the frame
       pack();
@@ -300,54 +301,67 @@ public class SudokuMain extends JFrame {
       menubar.menubar.setVisible(false);
    }
 
-   /*---------------------------------- Action Listener ---------------------------------- */
-   private class resetGame implements ActionListener {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-               board.getCell(row, col).disabled = false;
-               repaint();
-            }
+   private void checkGameOver() {
+      for (int r = 0; r < 9; ++r) {
+         for (int c = 0; c < 9; ++c) {
+            Cell sourceCell = board.getCell(r, c);
+            sourceCell.addKeyListener(new checkGameOverListener());
          }
-
-         timer.stop();
-         timer.start();
-         mistakesCount = 0;
-         lblMistakes.setText("Mistakes: " + mistakesCount);
-         lblTime.setText("00:00");
-         hintCount = 3;
-         lblHintLeft.setText("Hints Left: " + hintCount);
-
-         for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
-            for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
-               Cell referenceCell = board.getCell(row, col);
-               if (referenceCell.status != CellStatus.GIVEN) {
-                  referenceCell.status = CellStatus.TO_GUESS;
-                  seconds = 0;
-                  referenceCell.paint();
-               }
-               referenceCell.disabled = false;
-            }
-         }
-         cellsLeft = board.getCellsLeft();
-         lblCellsLeft.setText("Cells Left: " + cellsLeft);
-         for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
-            for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
-               Cell referenceCell = board.getCell(row, col);
-               if (referenceCell.isEditable()) {
-                  referenceCell.requestFocus();
-                  return;
-               }
-            }
-         }
-         initializeBoxCount();
-         initializeBoxFunction();
-         recolorFont();
       }
    }
 
-   private class newGame implements ActionListener {
+   private void resetGameState() {
+      for (int row = 0; row < 9; row++) {
+         for (int col = 0; col < 9; col++) {
+            board.getCell(row, col).disabled = false;
+            repaint();
+         }
+      }
+
+      timer.stop();
+      timer.start();
+      mistakesCount = 0;
+      lblMistakes.setText("Mistakes: " + mistakesCount);
+      lblTime.setText("00:00");
+      hintCount = 3;
+      lblHintLeft.setText("Hints Left: " + hintCount);
+
+      for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
+         for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
+            Cell referenceCell = board.getCell(row, col);
+            if (referenceCell.status != CellStatus.GIVEN) {
+               referenceCell.status = CellStatus.TO_GUESS;
+               seconds = 0;
+               referenceCell.paint();
+            }
+            referenceCell.disabled = false;
+         }
+      }
+      cellsLeft = board.getCellsLeft();
+      lblCellsLeft.setText("Cells Left: " + cellsLeft);
+      for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
+         for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
+            Cell referenceCell = board.getCell(row, col);
+            if (referenceCell.isEditable()) {
+               referenceCell.requestFocus();
+               return;
+            }
+         }
+      }
+      initializeBoxCount();
+      initializeBoxFunction();
+      recolorFont();
+   }
+
+   /*---------------------------------- Action Listener ---------------------------------- */
+   private class resetGameListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         resetGameState();
+      }
+   }
+
+   private class newGameListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
          for (int row = 0; row < 9; row++) {
@@ -550,4 +564,32 @@ public class SudokuMain extends JFrame {
          openInstructions();
       }
    }
+
+   class checkGameOverListener implements KeyListener {
+      @Override
+      public void keyTyped(KeyEvent evt) {
+         if (board.isGameOver()) {
+            SudokuMain.timer.stop();
+            gameOverPane = new JOptionPane("You Lost, please start a new game!");
+            JDialog dialog = gameOverPane.createDialog("Instructions");
+            dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            dialog.setModal(true);
+            dialog.setVisible(true);
+
+            int res = (int) gameOverPane.getValue();
+            if (res == 0) { // have been clicked
+               resetGameState();;
+            }
+         }
+      }
+
+      @Override
+      public void keyPressed(KeyEvent evt) {
+      }
+
+      @Override
+      public void keyReleased(KeyEvent evt) {
+      }
+   }
+
 }
