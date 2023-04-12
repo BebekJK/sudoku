@@ -17,11 +17,9 @@ public class MenuBar {
         // File Menu : new game, restart game, exit game
         newGameItem = new JMenuItem("New Game");
         restartGameItem = new JMenuItem("Reset");
-        exitGameItem = new JMenuItem("Exit");
         fileMenu.add(newGameItem);
         fileMenu.add(restartGameItem);
-        fileMenu.add(exitGameItem);
-
+        
         // Game Menu : toggle theme, toggle music, get hint
         toggleThemeItem = new JMenuItem("Change Theme");
         toggleSoundItem = new JMenuItem("Disable Sound");

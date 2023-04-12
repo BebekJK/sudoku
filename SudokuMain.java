@@ -406,7 +406,7 @@ public class SudokuMain extends JFrame {
                }
             }
             recolorFont();
-            imgPath = GameBoardPanel.isDarkMode ? "sudoku/bgdark.jpeg" : "sudoku/bglight.png";
+            imgPath = GameBoardPanel.isDarkMode ? "bgdark.jpeg" : "bglight.png";
             backcp.setBackgroundImage(imgPath);
             backcp.revalidate();
             backcp.repaint();
