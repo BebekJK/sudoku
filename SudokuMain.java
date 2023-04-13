@@ -310,58 +310,33 @@ public class SudokuMain extends JFrame {
       }
    }
 
-   private void resetGameState() {
+   private void newGameState() {
       for (int row = 0; row < 9; row++) {
          for (int col = 0; col < 9; col++) {
             board.getCell(row, col).disabled = false;
             repaint();
          }
       }
-
-      timer.stop();
-      timer.start();
       mistakesCount = 0;
       lblMistakes.setText("Mistakes: " + mistakesCount);
       lblTime.setText("00:00");
-      hintCount = 3;
-      lblHintLeft.setText("Hints Left: " + hintCount);
-
-      for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
-         for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
-            Cell referenceCell = board.getCell(row, col);
-            if (referenceCell.status != CellStatus.GIVEN) {
-               referenceCell.status = CellStatus.TO_GUESS;
-               seconds = 0;
-               referenceCell.paint();
-            }
-            referenceCell.disabled = false;
-         }
-      }
       cellsLeft = board.getCellsLeft();
       lblCellsLeft.setText("Cells Left: " + cellsLeft);
-      for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
-         for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
-            Cell referenceCell = board.getCell(row, col);
-            if (referenceCell.isEditable()) {
-               referenceCell.requestFocus();
-               return;
-            }
-         }
-      }
+      hintCount = 3;
+      lblHintLeft.setText("Hints Left: " + hintCount);
+      timer.stop();
+      timer.start();
+      seconds = 0;
+      board.newGame();
       initializeBoxCount();
       initializeBoxFunction();
       recolorFont();
+      revalidate();
+      repaint();
    }
 
    /*---------------------------------- Action Listener ---------------------------------- */
    private class resetGameListener implements ActionListener {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         resetGameState();
-      }
-   }
-
-   private class newGameListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
          for (int row = 0; row < 9; row++) {
@@ -370,22 +345,47 @@ public class SudokuMain extends JFrame {
                repaint();
             }
          }
+   
+         timer.stop();
+         timer.start();
          mistakesCount = 0;
          lblMistakes.setText("Mistakes: " + mistakesCount);
          lblTime.setText("00:00");
-         cellsLeft = board.getCellsLeft();
-         lblCellsLeft.setText("Cells Left: " + cellsLeft);
          hintCount = 3;
          lblHintLeft.setText("Hints Left: " + hintCount);
-         timer.stop();
-         timer.start();
-         seconds = 0;
-         board.newGame();
+   
+         for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
+            for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
+               Cell referenceCell = board.getCell(row, col);
+               if (referenceCell.status != CellStatus.GIVEN) {
+                  referenceCell.status = CellStatus.TO_GUESS;
+                  seconds = 0;
+                  referenceCell.paint();
+               }
+               referenceCell.disabled = false;
+            }
+         }
+         cellsLeft = board.getCellsLeft();
+         lblCellsLeft.setText("Cells Left: " + cellsLeft);
+         for (int row = 0; row < GameBoardPanel.GRID_SIZE; ++row) {
+            for (int col = 0; col < GameBoardPanel.GRID_SIZE; ++col) {
+               Cell referenceCell = board.getCell(row, col);
+               if (referenceCell.isEditable()) {
+                  referenceCell.requestFocus();
+                  return;
+               }
+            }
+         }
          initializeBoxCount();
          initializeBoxFunction();
          recolorFont();
-         revalidate();
-         repaint();
+      }
+   }
+
+   private class newGameListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         newGameState();
       }
    }
 
@@ -578,7 +578,7 @@ public class SudokuMain extends JFrame {
 
             int res = (int) gameOverPane.getValue();
             if (res == 0) { // have been clicked
-               resetGameState();;
+               newGameState();
             }
          }
       }
