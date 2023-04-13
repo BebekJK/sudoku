@@ -44,7 +44,6 @@ public class SudokuMain extends JFrame {
 
    // Constructor
    public SudokuMain() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-
       cp.setLayout(new BorderLayout());
       cp.add(start, BorderLayout.CENTER);
 
@@ -96,7 +95,7 @@ public class SudokuMain extends JFrame {
       menubar.menubar.setEnabled(false);
       menubar.menubar.setVisible(false);
       menubar.newGameItem.addActionListener(new newGameListener());
-      menubar.newGameItem.addActionListener(new resetGameListener());
+      menubar.restartGameItem.addActionListener(new resetGameListener());
       menubar.getHintItem.addActionListener(new hintListener());
       menubar.toggleThemeItem.addActionListener(new toggleTheme());
       menubar.toggleSoundItem.addActionListener(new toggleSound());
@@ -221,14 +220,12 @@ public class SudokuMain extends JFrame {
       topPane.add(new EmptyPanel());
       topPane.setOpaque(false);
       backcp.add(topPane, BorderLayout.NORTH);
-      // ----- END OF TOP PANE -----
 
       // BOTTOM PANE (consisting of statusbar)
       bottomPane.add(statusBar);
       bottomPane.add(new EmptyPanel());
       bottomPane.setOpaque(false);
       backcp.add(bottomPane, BorderLayout.SOUTH);
-      // ----- END OF BOTTOM PANE -----
 
       backcp.add(new EmptyPanel(), BorderLayout.WEST);
 
@@ -278,7 +275,6 @@ public class SudokuMain extends JFrame {
    }
 
    private void beginGameState() {
-      // Begin Timer and Music Background
       timer.start();
       bgMusic.start();
       bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
