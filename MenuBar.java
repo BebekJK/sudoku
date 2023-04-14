@@ -2,9 +2,7 @@ import javax.swing.*;
 
 public class MenuBar {
     JMenuBar menubar = new JMenuBar();
-
     JMenu fileMenu, gameMenu, helpMenu;
-
     JMenuItem newGameItem, restartGameItem, exitGameItem;
     JMenuItem toggleThemeItem, toggleSoundItem, getHintItem;
     JMenuItem instructionsItem, aboutItem;

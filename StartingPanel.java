@@ -101,7 +101,7 @@ public class StartingPanel extends JPanel {
     public void setBackgroundImage() {
         try {
             backgroundImage = ImageIO
-                    .read(new File("startingBackground.png"));
+                    .read(new File("bgStartingBackground.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -2,14 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
-// import javax.swing.border.CompoundBorder;
-// import javax.swing.border.EmptyBorder;
 
-/**
- * The Cell class model the cells of the Sudoku puzzle, by customizing
- * (subclass)
- * the javax.swing.JTextField to include row/column, puzzle number and status.
- */
 public class Cell extends JTextField {
    private static final long serialVersionUID = 1L; // to prevent serial warning
 
@@ -41,42 +34,34 @@ public class Cell extends JTextField {
    public static final Color BG_WRONG_GUESS_DARK = LightRed;
 
    public static final Font FONT_NUMBERS = new Font("OCR A Extended", Font.PLAIN, 28);
-   // Define properties (package-visible)
-   /** The row and column number [0-8] of this cell */
    int row, col;
-   /** The puzzle number [1-9] for this cell */
    int number;
    boolean focus, mainFocus, disabled;
-   /** The status of this cell defined in enum CellStatus */
    CellStatus status;
 
-   /** Constructor */
    public Cell(int row, int col) {
-      super(); // JTextField
+      super(); 
       this.row = row;
       this.col = col;
       focus = false;
-      // Inherited from JTextField: Beautify all the cells once for all
+
       super.setHorizontalAlignment(JTextField.CENTER);
       super.setFont(FONT_NUMBERS);
    }
 
-   /** Reset this cell for a new game, given the puzzle number and isGiven */
    public void newGame(int number, boolean isGiven) {
       this.number = number;
       status = isGiven ? CellStatus.GIVEN : CellStatus.TO_GUESS;
       focus = false;
-      paint(); // paint itself
+      paint(); 
    }
 
-   /** This Cell (JTextField) paints itself based on its status */
    public void paint() {
       if (disabled) {
          setEditable(false);
          return;
       }
       if (status == CellStatus.GIVEN) {
-         // Inherited from JTextField: Set display properties
          super.setText(number + "");
          super.setEditable(false);
          if ((row / 3 + col / 3) % 2 == 0)
@@ -85,20 +70,17 @@ public class Cell extends JTextField {
             super.setBackground(GameBoardPanel.isDarkMode ? BG_GIVEN_ODD_DARK : BG_GIVEN_ODD_LIGHT);
          super.setForeground(GameBoardPanel.isDarkMode ? FG_GIVEN_DARK : FG_GIVEN_LIGHT);
       } else if (status == CellStatus.TO_GUESS) {
-         // Inherited from JTextField: Set display properties
          super.setText("");
          super.setEditable(true);
          super.setBackground(GameBoardPanel.isDarkMode ? BG_TO_GUESS_DARK : BG_TO_GUESS_LIGHT);
          super.setForeground(GameBoardPanel.isDarkMode ? FG_NOT_GIVEN_DARK : FG_NOT_GIVEN_LIGHT);
       } else if (status == CellStatus.CORRECT_GUESS) {
-         // from TO_GUESS
          if ((row / 3 + col / 3) % 2 == 0)
             super.setBackground(GameBoardPanel.isDarkMode ? BG_GIVEN_EVEN_DARK : BG_GIVEN_EVEN_LIGHT);
          else
             super.setBackground(GameBoardPanel.isDarkMode ? BG_GIVEN_ODD_DARK : BG_GIVEN_ODD_LIGHT);
          setForeground(GameBoardPanel.isDarkMode ? FG_GIVEN_DARK : FG_GIVEN_LIGHT);
-         // super.setBackground(BG_CORRECT_GUESS);
-      } else if (status == CellStatus.WRONG_GUESS) { // from TO_GUESS
+      } else if (status == CellStatus.WRONG_GUESS) { 
          super.setBackground(GameBoardPanel.isDarkMode ? BG_WRONG_GUESS_DARK : BG_WRONG_GUESS_LIGHT);
       }
 
@@ -110,8 +92,6 @@ public class Cell extends JTextField {
             setBackground(GameBoardPanel.isDarkMode ? BrighterBlue : LightBlue);
       } else {
          setBorder(BorderFactory.createLineBorder(GameBoardPanel.isDarkMode ? FG_GIVEN_DARK : FG_GIVEN_LIGHT, 1));
-         // setBorder(null);
       }
-
    }
 }

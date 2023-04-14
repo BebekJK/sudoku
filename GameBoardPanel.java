@@ -3,21 +3,15 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GameBoardPanel extends JPanel {
-   private static final long serialVersionUID = 1L; // to prevent serial warning
+   private static final long serialVersionUID = 1L;
 
    public static Boolean isDarkMode = false;
-   // Define named constants for the game board properties
-   public static final int GRID_SIZE = 9; // Size of the board
-   public static final int SUBGRID_SIZE = 3; // Size of the sub-grid
-   // Define named constants for UI sizes
-   public static final int CELL_SIZE = 60; // Cell width/height in pixels
+   public static final int GRID_SIZE = 9; 
+   public static final int SUBGRID_SIZE = 3; 
+   public static final int CELL_SIZE = 60;
    public static final int BOARD_WIDTH = CELL_SIZE * GRID_SIZE;
    public static final int BOARD_HEIGHT = CELL_SIZE * GRID_SIZE;
-   // Board width/height in pixels
-   // Define properties
-   /** The game board composes of 9x9 Cells (customized JTextFields) */
    private Cell[][] cells = new Cell[GRID_SIZE][GRID_SIZE];
-   /** It also contains a Puzzle with array numbers and isGiven */
    private Puzzle puzzle = new Puzzle();
    private JOptionPane gameOverPane;
 
@@ -26,13 +20,13 @@ public class GameBoardPanel extends JPanel {
 
    /** Constructor */
    public GameBoardPanel() {
-      super.setLayout(new GridLayout(GRID_SIZE, GRID_SIZE, 2, 2)); // JPanel
+      super.setLayout(new GridLayout(GRID_SIZE, GRID_SIZE, 2, 2)); 
 
       // Allocate the 2D array of Cell, and added into JPanel.
       for (int row = 0; row < GRID_SIZE; ++row) {
          for (int col = 0; col < GRID_SIZE; ++col) {
             cells[row][col] = new Cell(row, col);
-            super.add(cells[row][col]); // JPanel
+            super.add(cells[row][col]); 
          }
       }
 
@@ -40,8 +34,6 @@ public class GameBoardPanel extends JPanel {
          for (int col = 0; col < GRID_SIZE; ++col) {
 
             if (cells[row][col].isEditable()) {
-               // cells[row][col].addActionListener(listener); // For all editable rows and
-               // cols
                cells[row][col].addKeyListener(new KeyCellInputListener());
                cells[row][col].addMouseListener(new mouseCellInputListener());
                cells[row][col].addFocusListener(new CellFocusListener());
@@ -52,13 +44,8 @@ public class GameBoardPanel extends JPanel {
       super.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
    }
 
-   /**
-    * Generate a new puzzle; and reset the gameboard of cells based on the puzzle.
-    * You can call this method to start a new game.
-    */
    public void newGame() {
       // Generate a new puzzle
-
       if (difficulty == GameDifficulty.EASY)
          cellsToGuess = 32;
       else if (difficulty == GameDifficulty.MEDIUM)
@@ -88,10 +75,6 @@ public class GameBoardPanel extends JPanel {
       }
    }
 
-   /**
-    * Return true if the puzzle is solved
-    * i.e., none of the cell have status of TO_GUESS or WRONG_GUESS
-    */
    public boolean isSolved() {
       return SudokuMain.cellsLeft == 0;
    }
@@ -115,15 +98,6 @@ public class GameBoardPanel extends JPanel {
 
    private Boolean isValidInput(char c) {
       return (c - '0' > 0 && c - '0' <= 9);
-   }
-
-   private void disableBoard() {
-      for (int row = 0; row < 9; row++) {
-         for (int col = 0; col < 9; col++) {
-            cells[row][col].disabled = true;
-            cells[row][col].paint();
-         }
-      }
    }
 
    class KeyCellInputListener implements KeyListener {
@@ -168,7 +142,6 @@ public class GameBoardPanel extends JPanel {
          for (int boxNumber = 0; boxNumber < 9; ++boxNumber) {
             if (SudokuMain.boxesCount[boxNumber] == 9) {
                JButton[] cellBoxesArray = SudokuMain.cellBoxesPanel.getCellBoxes();
-               // cellBoxesArray[boxNumber].setBackground(Color.BLACK);
                cellBoxesArray[boxNumber].setEnabled(false);
             }
          }
@@ -213,8 +186,6 @@ public class GameBoardPanel extends JPanel {
          Cell sourceCell = (Cell) evt.getSource();
          sourceCell.requestFocus();
       }
-
-      // Not used - need to provide an empty body to compile.
       @Override
       public void mousePressed(MouseEvent evt) {
       }
